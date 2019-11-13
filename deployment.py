@@ -44,26 +44,33 @@ def readConfigurations():
 
 
 def sftpConnection(host, user, password):
-    cnopts = pysftp.CnOpts()
-    if cnopts.hostkeys.lookup(host) == None:
-        print("New host - will accept any host key")
-        # Backup loaded .ssh/known_hosts file
-        hostkeys = cnopts.hostkeys
-        # And do not verify host key of the new host
-        cnopts.hostkeys = None
+        cnopts = pysftp.CnOpts()
+        if cnopts.hostkeys.lookup(host) == None:
+            print("New host - will accept any host key")
+            hostkeys = cnopts.hostkeys
+            cnopts.hostkeys = None
     
-    with pysftp.Connection(host, user, None ,password, cnopts=cnopts) as sftp:
-        print("Connection succesfully stablished ... ")
+        with pysftp.Connection(host, user, None ,password, cnopts=cnopts) as sftp:
+            print("Connection succesfully stablished ... ")
+        #this should always be the same
+            localFilePath = './'
+            if(deploymentConfiguration['config']['remote_pass'] == False):
+                remoteFilePath = '/'
+            else:
+                remoteFilePath = deploymentConfiguration['config']['remote_path']
 
-    # Define the file that you want to upload from your local directorty
-    # or absolute "C:\Users\sdkca\Desktop\TUTORIAL2.txt"
-        localFilePath = './testFile.txt'
-
-    # Define the remote path where the file will be uploaded
-        remoteFilePath = '/test/testFile.txt'
-
-        sftp.put(localFilePath, remoteFilePath)
-
+            for x in os.listdir():
+                forLoopLock = False
+                for y in deploymentConfiguration['config']['exclude_files'].split(','):
+                   if(x == y):
+                       forLoopLock = True
+                       break
+                if(forLoopLock == True): 
+                    print('File : "' + x + '" has been excluded')
+                else:
+                    print('File : "' + x + '" has been uploaded')
+                    sftp.put(localFilePath + x, remoteFilePath + x)
+                
 deploymentConfiguration = readConfigurations() 
 if(deploymentConfiguration != False):
     print("Configuration read successfully.")
