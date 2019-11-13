@@ -5,6 +5,7 @@ import socket
 import sys
 import pysftp
 import paramiko
+import sys
 
 config = configparser.ConfigParser()
 
@@ -44,6 +45,7 @@ def readConfigurations():
 
 
 def sftpConnection(host, user, password):
+    if(deploymentConfiguration['config']['debug_disable_sftp'] == "False"):
         cnopts = pysftp.CnOpts()
         if cnopts.hostkeys.lookup(host) == None:
             print("New host - will accept any host key")
@@ -70,7 +72,33 @@ def sftpConnection(host, user, password):
                 else:
                     print('File : "' + x + '" has been uploaded')
                     sftp.put(localFilePath + x, remoteFilePath + x)
-                
+    else:
+        print("Debug flag enabled will not upload files to sftp remote")
+        if(deploymentConfiguration['config']['push_to_github'] == "True"): 
+            print("attempting to push local repo to github")
+            commitMessage = ""
+            try:
+                sys.argv[1]
+                print("[GITHUB] Commit message will be: " + sys.argv[1])
+                commitMessage = sys.argv[1]
+            except:
+                commitMessage = "commit message not provided"
+                print("[GITHUB] Commit message is not provided.")
+                for x in os.listdir():
+                    forLoopLock = False
+                    for y in deploymentConfiguration['config']['exclude_files'].split(','):
+                        if(x == y):
+                            forLoopLock = True
+                            break
+                        if(forLoopLock == True): 
+                            print('File : "' + x + '" has been excluded')
+                        else:
+                            print('File : "' + x + '" has been uploaded')
+                            print("github : ", os.system("git merge"))
+                            print("github : ", os.system("git add ./" + x))
+                print("github : ", os.system('git commit -m "' + commitMessage + '"'))
+                print("github : ", os.system("git push"))
+
 deploymentConfiguration = readConfigurations() 
 if(deploymentConfiguration != False):
     print("Configuration read successfully.")
