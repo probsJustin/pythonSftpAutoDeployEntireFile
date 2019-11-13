@@ -93,9 +93,12 @@ def sftpConnection(host, user, password):
                         if(forLoopLock == True): 
                             print('File : "' + x + '" has been excluded')
                         else:
-                            print('File : "' + x + '" has been uploaded')
-                            print("github : ", os.system("git merge"))
-                            print("github : ", os.system("git add ./" + x))
+                            try:
+                                print('File : "' + x + '" has been uploaded')
+                                print("github : ", os.system("git merge"))
+                                print("github : ", os.system("git add ./" + x))
+                            except:
+                                print("There was a problem trying to push to github")
                 print("github : ", os.system('git commit -m "' + commitMessage + '"'))
                 print("github : ", os.system("git push"))
 
