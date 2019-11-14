@@ -75,10 +75,12 @@ def sftpConnection(host, user, password):
             try:
                 deploymentConfiguration['config']['remote_command']
                 print("command attempting to be sent")
+                print(deploymentConfiguration['config']['remote_command'])
+                sftp.execute(deploymentConfiguration['config']['remote_command'])
             except:
                 print("No deployment command enabled.")
-            print(deploymentConfiguration['config']['remote_command'])
-            sftp.execute(deploymentConfiguration['config']['remote_command'])
+            
+            
 
     else:
         print("Debug flag enabled will not upload files to sftp remote")
