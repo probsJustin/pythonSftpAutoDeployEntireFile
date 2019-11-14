@@ -15,24 +15,24 @@ exclude_files = deploymentConfig.ini,deployment.pyproj,deployment.py,env,.git,.g
 
 #comma separated list of files to exclude in the containing directory 
 
-remote_server = <remote address> 
+remote_server = remote address>
   
-remote_user = <remote username>
+remote_user = remote username
   
-remote_pass = <remote user password>
+remote_pass = remote user password
   
 
 #optional
 
 #note that remote_path will default to '/'
 
-remote_path = <path that you want to upload to> (note that this needs to include a '/' at the end) 
+remote_path = path that you want to upload to (note that this needs to include a '/' at the end) 
   
 debug_disable_sftp = (True or False)
 
 push_to_github = (True or False)
 
-remote_command = <remote command to be executed on your server>
+remote_command = remote command to be executed on your server
 
 ## TODO: 
 add more error handling for configurations to stop people from messing it up. 
