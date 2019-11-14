@@ -7,24 +7,35 @@ Think of this as your deployment buddy! This is a python script that you can pla
 
 Note: The local repo must be initialized and have an initial commit to allow for this to work correctly. 
 
-#Config file options
+# Config file options
 [config]
 #required
+
 exclude_files = deploymentConfig.ini,deployment.pyproj,deployment.py,env,.git,.gitignore,.gitattributes
+
 #comma separated list of files to exclude in the containing directory 
+
 remote_server = <remote address> 
+  
 remote_user = <remote username>
+  
 remote_pass = <remote user password>
+  
 
 #optional
+
 #note that remote_path will default to '/'
+
 remote_path = <path that you want to upload to> (note that this needs to include a '/' at the end) 
+  
 debug_disable_sftp = (True or False)
+
 push_to_github = (True or False)
+
 remote_command = <remote command to be executed on your server>
 
-##TODO: 
-possibly add creation and deployment of repo. 
+## TODO: 
+add more error handling for configurations to stop people from messing it up. 
 
 Requirements: 
 pystfp (version 0.2.9) 
