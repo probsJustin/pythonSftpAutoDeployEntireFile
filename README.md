@@ -15,7 +15,7 @@ exclude_files = deploymentConfig.ini,deployment.pyproj,deployment.py,env,.git,.g
 
 #comma separated list of files to exclude in the containing directory 
 
-remote_server = remote address>
+remote_server = remote address
   
 remote_user = remote username
   
