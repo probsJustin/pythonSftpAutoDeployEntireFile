@@ -62,7 +62,13 @@ def sftpConnection(host, user, password):
                 if(deploymentConfiguration['config']['remote_path'][-1] == '/' or deploymentConfiguration['config']['remote_path'][-1] == '\\'):
                     remoteFilePath = deploymentConfiguration['config']['remote_path']
                 else:
-                    remoteFilePath = deploymentConfiguration['config']['remote_path']
+                    if(deploymentConfiguration['config']['remote_path'][0] == "/"):
+                        remoteFilePath = deploymentConfiguration['config']['remote_path'] + "/"
+                    else:
+                        if(deploymentConfiguration['config']['remote_path'][0] == "\\"):
+                            remoteFilePath = deploymentConfiguration['config']['remote_path'] + "\\"
+
+
             for x in os.listdir():
                 forLoopLock = False
                 for y in deploymentConfiguration['config']['exclude_files'].split(','):
