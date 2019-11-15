@@ -59,8 +59,10 @@ def sftpConnection(host, user, password):
             if(deploymentConfiguration['config']['remote_pass'] == False):
                 remoteFilePath = '/'
             else:
-                remoteFilePath = deploymentConfiguration['config']['remote_path']
-
+                if(deploymentConfiguration['config']['remote_path'][-1] == '/' or deploymentConfiguration['config']['remote_path'][-1] == '\\'):
+                    remoteFilePath = deploymentConfiguration['config']['remote_path']
+                else:
+                    remoteFilePath = deploymentConfiguration['config']['remote_path']
             for x in os.listdir():
                 forLoopLock = False
                 for y in deploymentConfiguration['config']['exclude_files'].split(','):
@@ -74,6 +76,7 @@ def sftpConnection(host, user, password):
                     sftp.put(localFilePath + x, remoteFilePath + x)
             try:
                 deploymentConfiguration['config']['remote_command']
+                
                 print("command attempting to be sent")
                 print(deploymentConfiguration['config']['remote_command'])
                 sftp.execute(deploymentConfiguration['config']['remote_command'])
