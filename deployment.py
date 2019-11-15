@@ -67,6 +67,8 @@ def sftpConnection(host, user, password):
                     else:
                         if(deploymentConfiguration['config']['remote_path'][0] == "\\"):
                             remoteFilePath = deploymentConfiguration['config']['remote_path'] + "\\"
+                        else:
+                            remoteFilePath = deploymentConfiguration['config']['remote_path'] + "/"
 
 
             for x in os.listdir():
