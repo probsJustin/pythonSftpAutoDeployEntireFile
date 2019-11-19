@@ -1,0 +1,12 @@
+root - WARNING - Configuration read successfully.
+root - WARNING - Will attempt to connect.
+root - WARNING - New host - will accept any host key
+root - WARNING - Connection succesfully stablished ... 
+root - WARNING - File : ".git" has been excluded
+root - WARNING - File : ".gitignore" has been excluded
+root - WARNING - File : "deployment.py" has been excluded
+root - WARNING - File : "deployment.pyproj" has been excluded
+root - WARNING - File : "deploymentConfig.ini" has been excluded
+root - WARNING - File : "env" has been excluded
+root - WARNING - command attempting to be sent
+root - WARNING - echo walrus | sudo -S service apache2 restart
