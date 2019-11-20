@@ -81,19 +81,15 @@ def sftpConnection(host, user, password):
 
 
             for x in os.listdir():
-                forLoopLock = False
-                for y in deploymentConfiguration['config']['exclude_files'].split(','):
-                   if(x == y):
-                       forLoopLock = True
-                       break
-                if(forLoopLock == True): 
+                if(x in deploymentConfiguration['config']['exclude_files'].split(',')):
+
                     logThis('File : "' + x + '" has been excluded')
                 else:
                     print('File : "' + x + '" has been uploaded')
                     sftp.put(localFilePath + x, remoteFilePath + x)
             try:
                 deploymentConfiguration['config']['remote_command']
-                
+       
                 logThis("command attempting to be sent")
                 logThis(deploymentConfiguration['config']['remote_command'])
                 sftp.execute(deploymentConfiguration['config']['remote_command'])
