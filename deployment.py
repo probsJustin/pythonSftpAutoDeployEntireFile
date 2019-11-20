@@ -124,7 +124,6 @@ def sftpConnection(host, user, password):
                 logThis("[GITHUB] Commit message is not provided.")
                 logFile(traceback.format_exc())
             for x in os.listdir():
-                forLoopLock = False   
                 if(x in deploymentConfiguration['config']['exclude_files'].split(',')): 
                     logThis('File : "' + x + '" has been excluded')
                 else:
