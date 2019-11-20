@@ -1,12 +1,9 @@
 import configparser
-import __future__
 import os
-import socket
-import sys
 import pysftp
-import paramiko
 import sys
 import logging
+import traceback
 
 config = configparser.ConfigParser()
 logging.basicConfig(filename='deployment.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
@@ -64,7 +61,6 @@ def sftpConnection(host, user, password):
             logThis("New host - will accept any host key")
             hostkeys = cnopts.hostkeys
             cnopts.hostkeys = None
-    
         with pysftp.Connection(host, user, None ,password, cnopts=cnopts) as sftp:
             logThis("Connection succesfully stablished ... ")
         #this should always be the same
@@ -132,22 +128,18 @@ def sftpConnection(host, user, password):
                 logThis("[GITHUB] Commit message is not provided.")
                 logFile(traceback.format_exc())
             for x in os.listdir():
-                forLoopLock = False
-                for y in deploymentConfiguration['config']['exclude_files'].split(','):
-                    if(x == y):
-                        forLoopLock = True
-                        break
-                    if(forLoopLock == True): 
-                        logThis('File : "' + x + '" has been excluded')
-                    else:
-                        try:
-                           logThis('File : "' + x + '" has been uploaded')
-                           logThis("github : " + os.system("git merge"))
-                           logThis("github : " + os.system("git add ./" + x))
-                        except Exception as error:
-                           logThis("There was a problem trying to push to github")
-                           logFile(traceback.format_exc())
-                           logFile(error)
+                forLoopLock = False   
+                if(x in deploymentConfiguration['config']['exclude_files'].split(',')): 
+                    logThis('File : "' + x + '" has been excluded')
+                else:
+                    try:
+                        logThis('File : "' + x + '" has been uploaded')
+                        logThis("github : " + os.system("git merge"))
+                        logThis("github : " + os.system("git add ./" + x))
+                    except Exception as error:
+                        logThis("There was a problem trying to push to github")
+                        logFile(traceback.format_exc())
+                        logFile(error)
             try:
                logThis("github : ", os.system('git commit -m "' + commitMessage + '"'))
                logThis("github : ", os.system("git push"))
