@@ -142,8 +142,8 @@ def sftpConnection(host, user, password):
                     else:
                         try:
                            logThis('File : "' + x + '" has been uploaded')
-                           logThis("github : ", os.system("git merge"))
-                           logThis("github : ", os.system("git add ./" + x))
+                           logThis("github : " + os.system("git merge"))
+                           logThis("github : " + os.system("git add ./" + x))
                         except Exception as error:
                            logThis("There was a problem trying to push to github")
                            logFile(traceback.format_exc())
@@ -156,10 +156,13 @@ def sftpConnection(host, user, password):
                 logFile(traceback.format_exc())
                 logThis("There was a problem trying to push to github")
 deploymentConfiguration = readConfigurations() 
+
 if(deploymentConfiguration != False):
     logThis("Configuration read successfully.")
     logThis("Will attempt to connect.")
-    
-    sftpConnection(deploymentConfiguration['config']['remote_server'], deploymentConfiguration['config']['remote_user'],deploymentConfiguration['config']['remote_pass'])
+    try:
+        sftpConnection(deploymentConfiguration['config']['remote_server'], deploymentConfiguration['config']['remote_user'],deploymentConfiguration['config']['remote_pass'])
+    except Exception as error: 
+        logThis(error)
 else:
     logThis("Deployment will not continue as there is an error in the configuration.")
