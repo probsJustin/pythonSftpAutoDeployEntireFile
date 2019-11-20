@@ -18,6 +18,7 @@ def logFile(logText):
 
 def readConfigurations():
     configurations = dict() 
+    returnOption = True
     try:
         config.read('./deploymentConfig.ini')
     except Exception as error:
@@ -26,32 +27,15 @@ def readConfigurations():
         logThis("Configuration file is not available for some reason.")
    
     configurations = config._sections
-    try:
-        configurations['config']['remote_server']
-    except KeyError:
-        logThis("There was a problem with the remote_server configuration.")
-        return False
-    try:
-        configurations['config']['remote_pass']
-    except KeyError:
-        logThis("There was a problem with the remote_pass configuration.")
-        return False
-    try:
-        configurations['config']['remote_user']
-    except KeyError:
-        logThis("There was a problem with the remote_user configuration.")
-        return False
-
-    if(configurations['config']['remote_server'] == False):
-        logThis("remote_server is missing from the configuration file.")
-        return False
-    if(configurations['config']['remote_user'] == False):
-        logThis("remote_user is missing from the configuration file.")
-        return False
-    if(configurations['config']['remote_pass'] == False):
-        logThis("remote_pass is missing from the configuration file.")
-        return False
-    return configurations
+    checks = ['remote_pass','remote_user','remote_server']
+    for check in checks: 
+        if check not in configurations['config'].keys():
+            print(f"{check} is not in the configuration file")
+            returnOption = False
+        if not configurations.get('config').get(check):
+            print(f"{check} is missing a value in the configuration file")
+            returnOption = False
+    return (returnOption if not returnOption else configurations)
 
 
 def sftpConnection(host, user, password):
