@@ -12,15 +12,20 @@ config = configparser.ConfigParser()
 logging.basicConfig(filename='deployment.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
 
 def logThis(logText):
-    logging.warning(logText)
+    logFile(logText)
     print(logText)
+
+def logFile(logText):
+    logging.warning(logText)
 
 
 def readConfigurations():
     configurations = dict() 
     try:
         config.read('./deploymentConfig.ini')
-    except:
+    except Exception as error:
+        logFile(error)
+        logFile(traceback.format_exc())
         logThis("Configuration file is not available for some reason.")
    
     configurations = config._sections
@@ -96,7 +101,9 @@ def sftpConnection(host, user, password):
                 logThis("command attempting to be sent")
                 logThis(deploymentConfiguration['config']['remote_command'])
                 sftp.execute(deploymentConfiguration['config']['remote_command'])
-            except:
+            except Exception as error:
+                logFile(error)
+                logFile(traceback.format_exc())
                 logThis("No deployment command enabled.")
             
             
@@ -107,9 +114,11 @@ def sftpConnection(host, user, password):
             if(sys.argv[2] == "github"): 
                 logThis("github is enabled")
                 github = deploymentConfiguration['config']['push_to_github']
-        except:
+        except Exception as error:
             github = "False"
-            print("We will not push to github") 
+            logFile(error)
+            logFile(traceback.format_exc())
+            print("We will not push to github")
             
         if(github == "True"): 
             logThis("attempting to push local repo to github")
@@ -118,9 +127,10 @@ def sftpConnection(host, user, password):
                 sys.argv[1]
                 logThis("[GITHUB] Commit message will be: " + sys.argv[1])
                 commitMessage = sys.argv[1]
-            except:
+            except Exception as error:
                 commitMessage = "commit message not provided"
                 logThis("[GITHUB] Commit message is not provided.")
+                logFile(traceback.format_exc())
             for x in os.listdir():
                 forLoopLock = False
                 for y in deploymentConfiguration['config']['exclude_files'].split(','):
@@ -134,13 +144,17 @@ def sftpConnection(host, user, password):
                            logThis('File : "' + x + '" has been uploaded')
                            logThis("github : ", os.system("git merge"))
                            logThis("github : ", os.system("git add ./" + x))
-                        except:
+                        except Exception as error:
                            logThis("There was a problem trying to push to github")
+                           logFile(traceback.format_exc())
+                           logFile(error)
             try:
                logThis("github : ", os.system('git commit -m "' + commitMessage + '"'))
                logThis("github : ", os.system("git push"))
-            except:
-               logThis("There was a problem trying to push to github")
+            except Exception as error:
+                logFile(error)
+                logFile(traceback.format_exc())
+                logThis("There was a problem trying to push to github")
 deploymentConfiguration = readConfigurations() 
 if(deploymentConfiguration != False):
     logThis("Configuration read successfully.")
