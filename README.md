@@ -40,4 +40,5 @@ push_to_github = (True or False)
 remote_command = remote command to be executed on your server
 
 ## TODO: 
-add pem key authentication to allow for users to use keys as well for authentication
+[x]add pem key authentication to allow for users to use keys as well for authentication
+[ ]refactor connection code to remove duplicated items 
