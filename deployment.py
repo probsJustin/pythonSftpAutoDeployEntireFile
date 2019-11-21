@@ -50,7 +50,7 @@ def sftpConnection(host, user, password):
             hostkeys = cnopts.hostkeys
             cnopts.hostkeys = None
             logThis("Connecting to : " + str(host))
-        if(deploymentConfiguration['config']['remote_auth_settings'] == "pem" and Path.exists(deploymentConfiguration['config']['local_pem_path'])):
+        if(deploymentConfiguration['config']['remote_auth_settings'] == "pem" and Path(deploymentConfiguration['config']['local_pem_path']).exists()):
             try:
                 with pysftp.Connection(host, user, deploymentConfiguration['config']['local_pem_path']) as sftp:
                     logThis("Connection succesfully stablished ... ")
@@ -79,11 +79,11 @@ def sftpConnection(host, user, password):
                         logFile(traceback.format_exc())
                         logThis("No deployment command enabled.")
             except:
-                logFile(traceback.format_exc())
+                print("TEST")
                 logThis("This is likely due to a missing PEM file.") 
                 logThis("We tried to get the pem key at : " + str(deploymentConfiguration['config']['local_pem_path']))
         else:
-            if not Path.exists(str(deploymentConfiguration['config']['local_pem_path'])):
+            if not Path.exists(deploymentConfiguration['config']['local_pem_path']):
                 logThis("PEM key does not exist - attempting to connect with password")
             with pysftp.Connection(host, user, None ,password, cnopts=cnopts) as sftp:
                 logThis("Connection succesfully stablished ... ")
@@ -167,6 +167,5 @@ if(deploymentConfiguration != False):
         sftpConnection(deploymentConfiguration['config']['remote_server'], deploymentConfiguration['config']['remote_user'],deploymentConfiguration['config']['remote_pass'])
     except Exception as error: 
         logThis(error)
-        logFile(traceback.format_exc())
 else:
     logThis("Deployment will not continue as there is an error in the configuration.")
