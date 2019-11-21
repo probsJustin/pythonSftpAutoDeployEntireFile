@@ -4,6 +4,7 @@ import pysftp
 import sys
 import logging
 import traceback
+from pathlib import Path
 
 config = configparser.ConfigParser()
 logging.basicConfig(filename='deployment.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
@@ -49,28 +50,18 @@ def sftpConnection(host, user, password):
             logThis("Connection succesfully stablished ... ")
         #this should always be the same
             localFilePath = './'
-            if(deploymentConfiguration['config']['remote_pass'] == False):
-                remoteFilePath = '/'
+            if(deploymentConfiguration['config']['remote_path'] == False):
+                deploymentConfiguration['config']['remote_path'] = '/'
             else:
-                if(deploymentConfiguration['config']['remote_path'][-1] == '/' or deploymentConfiguration['config']['remote_path'][-1] == '\\'):
-                    remoteFilePath = deploymentConfiguration['config']['remote_path']
-                else:
-                    if(deploymentConfiguration['config']['remote_path'][0] == "/"):
-                        remoteFilePath = deploymentConfiguration['config']['remote_path'] + "/"
-                    else:
-                        if(deploymentConfiguration['config']['remote_path'][0] == "\\"):
-                            remoteFilePath = deploymentConfiguration['config']['remote_path'] + "\\"
-                        else:
-                            remoteFilePath = deploymentConfiguration['config']['remote_path'] + "/"
-
+                deploymentConfiguration['config']['remote_path'] = str(Path(deploymentConfiguration['config']['remote_path']))
+                print(deploymentConfiguration['config']['remote_path'])
 
             for x in os.listdir():
                 if(x in deploymentConfiguration['config']['exclude_files'].split(',')):
-
                     logThis('File : "' + x + '" has been excluded')
                 else:
                     print('File : "' + x + '" has been uploaded')
-                    sftp.put(localFilePath + x, remoteFilePath + x)
+                    sftp.put(localFilePath + x, deploymentConfiguration['config']['remote_path'] + x)
             try:
                 deploymentConfiguration['config']['remote_command']
        
