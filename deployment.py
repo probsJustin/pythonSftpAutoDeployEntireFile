@@ -49,6 +49,7 @@ def sftpConnection(host, user, password):
             logThis("New host - will accept any host key")
             hostkeys = cnopts.hostkeys
             cnopts.hostkeys = None
+            logThis("Connecting to : " + str(host))
         with pysftp.Connection(host, user, None ,password, cnopts=cnopts) as sftp:
             logThis("Connection succesfully stablished ... ")
         #this should always be the same
