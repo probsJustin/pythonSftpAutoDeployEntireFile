@@ -40,7 +40,4 @@ push_to_github = (True or False)
 remote_command = remote command to be executed on your server
 
 ## TODO: 
-add more error handling for configurations to stop people from messing it up. 
-
-Requirements: 
-pystfp (version 0.2.9) 
+add pem key authentication to allow for users to use keys as well for authentication
