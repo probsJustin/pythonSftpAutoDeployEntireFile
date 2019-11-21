@@ -2,8 +2,13 @@ root - WARNING - Configuration read successfully.
 root - WARNING - Will attempt to connect.
 root - WARNING - New host - will accept any host key
 root - WARNING - Connecting to : 167.172.233.130
-root - WARNING - Connection succesfully stablished ... 
-root - WARNING - File : ".git" has been excluded
-root - WARNING - File : ".gitattributes" has been excluded
-root - WARNING - File : ".gitignore" has been excluded
-root - WARNING - [Errno 13] Permission denied: './.vs'
+root - WARNING - 'str' object has no attribute 'stat'
+root - WARNING - Traceback (most recent call last):
+  File "C:\Users\Justin.Hagerty\Desktop\Repos\pythonSftpAutoDeployEntireFile\deployment.py", line 167, in <module>
+    sftpConnection(deploymentConfiguration['config']['remote_server'], deploymentConfiguration['config']['remote_user'],deploymentConfiguration['config']['remote_pass'])
+  File "C:\Users\Justin.Hagerty\Desktop\Repos\pythonSftpAutoDeployEntireFile\deployment.py", line 53, in sftpConnection
+    if(deploymentConfiguration['config']['remote_auth_settings'] == "pem" and Path.exists(deploymentConfiguration['config']['local_pem_path'])):
+  File "C:\Users\Justin.Hagerty\AppData\Local\Programs\Python\Python36\lib\pathlib.py", line 1336, in exists
+    self.stat()
+AttributeError: 'str' object has no attribute 'stat'
+
