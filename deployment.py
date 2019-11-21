@@ -6,6 +6,9 @@ import logging
 import traceback
 from pathlib import Path
 
+#By: Justin Hagerty 2019
+#Next Task: add pem keys to allow for better authentication. 
+
 config = configparser.ConfigParser()
 logging.basicConfig(filename='deployment.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
 
