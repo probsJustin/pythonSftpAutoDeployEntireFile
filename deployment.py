@@ -51,39 +51,46 @@ def sftpConnection(host, user, password):
             cnopts.hostkeys = None
             logThis("Connecting to : " + str(host))
         if(deploymentConfiguration['config']['remote_auth_settings'] == "pem" and Path(deploymentConfiguration['config']['local_pem_path']).exists()):
-            try:
-                with pysftp.Connection(host, user, deploymentConfiguration['config']['local_pem_path']) as sftp:
-                    logThis("Connection succesfully stablished ... ")
-                    #this should always be the same
-                    localFilePath = './'
-                    if(deploymentConfiguration['config']['remote_path'] == False):
-                        deploymentConfiguration['config']['remote_path'] = '/'
-                    else:
-                        deploymentConfiguration['config']['remote_path'] = str(Path(deploymentConfiguration['config']['remote_path']))
-                        print(deploymentConfiguration['config']['remote_path'])
-
-                    for x in os.listdir():
-                        if(x in deploymentConfiguration['config']['exclude_files'].split(',')):
-                            logThis('File : "' + x + '" has been excluded')
+            if(os.path.splitext(Path(deploymentConfiguration['config']['local_pem_path']))[1] == '.pem'):
+                print("Supported key identified. This will attempt to connect if this .pem file is not a key it will break.")
+                try:
+                    with pysftp.Connection(host, user, deploymentConfiguration['config']['local_pem_path']) as sftp:
+                        logThis("Connection succesfully stablished ... ")
+                        #this should always be the same
+                        localFilePath = './'
+                        if(deploymentConfiguration['config']['remote_path'] == False):
+                            deploymentConfiguration['config']['remote_path'] = '/'
                         else:
-                            print('File : "' + x + '" has been uploaded')
-                            sftp.put(localFilePath + x, deploymentConfiguration['config']['remote_path'] + x)
-                    try:
-                        deploymentConfiguration['config']['remote_command']
+                            deploymentConfiguration['config']['remote_path'] = str(Path(deploymentConfiguration['config']['remote_path']))
+                            print(deploymentConfiguration['config']['remote_path'])
+
+                        for x in os.listdir():
+                            if(x in deploymentConfiguration['config']['exclude_files'].split(',')):
+                                logThis('File : "' + x + '" has been excluded')
+                            else:
+                                print('File : "' + x + '" has been uploaded')
+                                sftp.put(localFilePath + x, deploymentConfiguration['config']['remote_path'] + x)
+                        try:
+                            deploymentConfiguration['config']['remote_command']
        
-                        logThis("command attempting to be sent")
-                        logThis(deploymentConfiguration['config']['remote_command'])
-                        sftp.execute(deploymentConfiguration['config']['remote_command'])
-                    except Exception as error:
-                        logFile(error)
-                        logFile(traceback.format_exc())
-                        logThis("No deployment command enabled.")
-            except:
-                print("TEST")
-                logThis("This is likely due to a missing PEM file.") 
-                logThis("We tried to get the pem key at : " + str(deploymentConfiguration['config']['local_pem_path']))
+                            logThis("command attempting to be sent")
+                            logThis(deploymentConfiguration['config']['remote_command'])
+                            sftp.execute(deploymentConfiguration['config']['remote_command'])
+                        except Exception as error:
+                            logFile(error)
+                            logFile(traceback.format_exc())
+                            logThis("No deployment command enabled.")
+ 
+                
+                except AttributeError: 
+                    print("error") 
+                except:
+                    logThis("This is likely due to a missing PEM file.") 
+                    logThis("We tried to get the pem key at : " + str(deploymentConfiguration['config']['local_pem_path']))
+            else:
+                print("This is not a supported key.") 
         else:
-            if not Path.exists(deploymentConfiguration['config']['local_pem_path']):
+            if not (Path(deploymentConfiguration['config']['local_pem_path']).exists()):
                 logThis("PEM key does not exist - attempting to connect with password")
             with pysftp.Connection(host, user, None ,password, cnopts=cnopts) as sftp:
                 logThis("Connection succesfully stablished ... ")
@@ -92,7 +99,7 @@ def sftpConnection(host, user, password):
                 if(deploymentConfiguration['config']['remote_path'] == False):
                     deploymentConfiguration['config']['remote_path'] = '/'
                 else:
-                    if(Path.exists(deploymentConfiguration['config']['remote_path'])):
+                    if(Path(deploymentConfiguration['config']['remote_path']).exists()):
                         deploymentConfiguration['config']['remote_path'] = str(Path(deploymentConfiguration['config']['remote_path']))
                         logThis("Setting log path as : " + str(deploymentConfiguration['config']['remote_path']))
 
@@ -165,7 +172,13 @@ if(deploymentConfiguration != False):
     logThis("Will attempt to connect.")
     try:
         sftpConnection(deploymentConfiguration['config']['remote_server'], deploymentConfiguration['config']['remote_user'],deploymentConfiguration['config']['remote_pass'])
+    except AttributeError:
+        logThis("Handled")
+        logFile(traceback.format_exc())
+
+        pass
     except Exception as error: 
         logThis(error)
+        pass
 else:
     logThis("Deployment will not continue as there is an error in the configuration.")

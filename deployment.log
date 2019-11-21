@@ -2,5 +2,3 @@ root - WARNING - Configuration read successfully.
 root - WARNING - Will attempt to connect.
 root - WARNING - New host - will accept any host key
 root - WARNING - Connecting to : 167.172.233.130
-root - WARNING - This is likely due to a missing PEM file.
-root - WARNING - We tried to get the pem key at : /
