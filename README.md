@@ -8,6 +8,12 @@ Think of this as your deployment buddy! This is a python script that you can pla
 
 Note: The local repo must be initialized and have an initial commit to allow for this to work correctly. 
 
+### Support:
+https://discord.gg/sYkjaF
+
+ - if you have any questions or concerns about how to use this please let me know. Feel free to star it if it works out for you. 
+
+
 ### Reason: 
 
 I could see a bunch of things that claimed to use sftp and ssh to push things remotely to a set server but the ones that I had found were pretty shotty and or confusing to configure correctly. It seemed like a good idea to write one out that allows for a single command to push to github and remote locations as well as run a command to make the changes. 
